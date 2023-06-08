@@ -6,3 +6,5 @@ MELD.Raw
 *.ipynb_checkpoints
 *.p
 *.icloud
+*.arff
+*.vscode
