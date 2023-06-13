@@ -39,7 +39,7 @@ flags.DEFINE_integer("timesteps", 40, "Number of timesteps of the RNN")
 flags.DEFINE_integer("class_size", None, "No. of output classes")
 flags.DEFINE_boolean("nonlin", True, "Use non linearity")
 flags.DEFINE_float("dropout_keep_prob", 0.3, "Percentage of input to keep in dropout")
-
+u
 # Misc Parameters
 flags.DEFINE_integer("checkpoint_every", 10, "Save model after this many steps (default: 100)")
 flags.DEFINE_integer("num_checkpoints", 10, "Number of checkpoints to store (default: 5)")
@@ -47,6 +47,8 @@ flags.DEFINE_boolean("allow_soft_placement", True, "Allow device soft device pla
 flags.DEFINE_boolean("log_device_placement", False, "Log placement of ops on devices")
 FLAGS = flags.FLAGS
 FLAGS(sys.argv)
+
+
 
 
 def main():

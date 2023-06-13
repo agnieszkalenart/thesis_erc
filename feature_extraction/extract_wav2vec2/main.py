@@ -13,30 +13,30 @@ import ast
 
 
 
-# DATA_PATH = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/IEMOCAP'
+DATA_PATH = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/IEMOCAP'
 
-# #read data
-# iemocap_reader = IEMOCAPReader()
-# df_data = iemocap_reader.process(data_path=DATA_PATH, min_duration=0.0, min_sad_frames_duration=0, sample=None,compute_speech_rate=True)
-
-# #pre-process data
-# #relabel
-# # relabel = Relabel()
-# # relabels = [{'column': 'emotion', 'old_name': 'excited', 'new_name': 'happiness'}]
-# # df_data = relabel.process(enable=True, data=df_data, relabels=relabels)
-# #filter
-# # include_values =  ['anger','happiness','sadness','neutral']
-# # column = 'emotion'
-# # filter = Filter()
-# # df_data = filter.process(df_data=df_data, column_filter=column, include_values=include_values)
-# #label encoder
+#read data
+iemocap_reader = IEMOCAPReader()
+df_data = iemocap_reader.process(data_path=DATA_PATH, min_duration=0.0, min_sad_frames_duration=0, sample=None,compute_speech_rate=True)
+print(df_data.loc[['Ses01F_impro04_M010']])
+#pre-process data
+#relabel
+# relabel = Relabel()
+# relabels = [{'column': 'emotion', 'old_name': 'excited', 'new_name': 'happiness'}]
+# df_data = relabel.process(enable=True, data=df_data, relabels=relabels)
+#filter
+# include_values =  ['anger','happiness','sadness','neutral']
 # column = 'emotion'
-# new_column = 'classID'
-# label_encoder = LabelEncoder()
-# df_data, possible_labels = label_encoder.process(df_data=df_data, column=column, new_column=new_column)
+# filter = Filter()
+# df_data = filter.process(df_data=df_data, column_filter=column, include_values=include_values)
+#label encoder
+column = 'emotion'
+new_column = 'classID'
+label_encoder = LabelEncoder()
+df_data, possible_labels = label_encoder.process(df_data=df_data, column=column, new_column=new_column)
 
-# #small data
-# # df_data= df_data.head(5)
+#small data
+# df_data= df_data.head(5)
 
 # #create wav2vec2 features
 # wav2vec2_model_path = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/wav2vec2/wav2vec_small.pt'
@@ -62,9 +62,9 @@ import ast
 # # data['wav2vec2'] = data['wav2vec2'].apply(lambda x: x.tolist())
 
 
-# #create opensmile features
-# opensmile = OpensmileExtractor()
-# data = opensmile.process(data=df_data, output_column='opensmile')
+#create opensmile features
+opensmile = OpensmileExtractor()
+data = opensmile.process(data=df_data, output_column='opensmile')
 
 
 # #create spectrogram features
@@ -73,10 +73,10 @@ import ast
 # data['spectrogram'] = data['spectrogram'].apply(lambda x: x.tolist())
 
 
-# #preprocess WAV2VEC2 sequence
-# #data.to_csv('iemocap_with_features_full.csv')
+#preprocess WAV2VEC2 sequence
+data.to_csv('iemocap_with_features_full.csv')
 
-#to opensmile pickle
+# to opensmile pickle
 data = pd.read_csv('/Users/agnieszkalenart/Documents/mannheim/master_thesis/iemocap_with_features_full.csv')
 data['opensmile'] = data['opensmile'].apply(lambda x: ast.literal_eval(x))
 data['opensmile'] = data['opensmile'].apply(np.array)

@@ -39,8 +39,10 @@ class IEMOCAPReader():
 
         data = {}
         sentences_wav_files = glob.glob('{}/*/sentences/wav/*/*.wav'.format(data_path))
-        for path_filename in tqdm.tqdm(sentences_wav_files):
+           
+        for path_filename in sentences_wav_files:
             p = Path(path_filename)
+
             x, fs = librosa.core.load(p,sr=None)
             duration = x.size / fs
             logid = p.stem
@@ -50,7 +52,7 @@ class IEMOCAPReader():
                            'modality_code': logid.split('_')[1],
                            'subject': p.stem.split('_')[0], 'session': int(p.stem.split('_')[0][4]),
                            'start': 0, 'end': duration, 'duration': duration}
-
+        
         regex1 = r'\[(\d+\.?\d*) - (\d+\.?\d*)\]\t([^\s]*)\t([^\s]*)\t\[(\d+\.?\d*), (\d+\.?\d*), (\d+\.?\d*)\]\n'
         regex11 = r'\[\d+\.?\d* - \d+\.?\d*\]\t([^\s]*)\t[^\s]*\t\[\d+\.?\d*, \d+\.?\d*, \d+\.?\d*\]\n'
         regex2 = r'([a-zA-z]+);'
@@ -132,14 +134,15 @@ class IEMOCAPReader():
 
                 data[p.stem].update({'syl_avg_dur': syl_avg_dur, 'syl_avg_rate': 1.0 / syl_avg_dur, 'syl_times': syl_times})
 
+       
         df_data = pd.DataFrame.from_dict(data, orient='index')
+
 
         df_data['annotations_entropy'] = df_data.annotations.map(lambda x: list2entropy(x[:3]))
         df_data['annotations_entropy_self_report'] = df_data.annotations.map(lambda x: list2entropy(x))
         df_data['annotations_full_agreement'] = df_data['annotations_entropy'] == 0.0
 
-        df_data.dropna(inplace=True)
-
+        #df_data.dropna(inplace=True)
 
         # Full sentences
         df_data['sentences'] = df_data.words_data.map(lambda x: ' '.join(map(lambda x: x[2], x)))
