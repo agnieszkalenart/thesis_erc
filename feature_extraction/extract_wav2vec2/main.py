@@ -38,33 +38,33 @@ df_data, possible_labels = label_encoder.process(df_data=df_data, column=column,
 #small data
 # df_data= df_data.head(5)
 
-# #create wav2vec2 features
-# wav2vec2_model_path = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/wav2vec2/wav2vec_small.pt'
-# wav2vec2_dict_path = None
-# normalization_axis = 1
-# wav2vec2_padding_axis = 1
-# max_size = 240000
-# mode  = 'sequence'
-# output_column = 'wav2vec2'
-# layer = 'output'
-# save_feature_files = True
+#create wav2vec2 features
+wav2vec2_model_path = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/wav2vec2/wav2vec_small.pt'
+wav2vec2_dict_path = None
+normalization_axis = 1
+wav2vec2_padding_axis = 1
+max_size = 240000
+mode  = 'sequence'
+output_column = 'wav2vec2'
+layer = 'output'
+save_feature_files = True
 
-# # wav2vec2 = Wav2Vec2Embeddings()
-# # model, cfg, task = wav2vec2.build_wav2vec_model(model_path=wav2vec2_model_path)
-# # data = wav2vec2.process(data = df_data,
-# #                 model_path=wav2vec2_model_path,
-# #                  max_size=max_size,
-# #                  mode= mode,
-# #                  output_column=output_column,
-# #                  layer = layer,
-# #                  save_feature_files= save_feature_files)
+wav2vec2 = Wav2Vec2Embeddings()
+model, cfg, task = wav2vec2.build_wav2vec_model(model_path=wav2vec2_model_path)
+data = wav2vec2.process(data = df_data,
+                model_path=wav2vec2_model_path,
+                 max_size=max_size,
+                 mode= mode,
+                 output_column=output_column,
+                 layer = layer,
+                 save_feature_files= save_feature_files)
 
-# # data['wav2vec2'] = data['wav2vec2'].apply(lambda x: x.tolist())
+data['wav2vec2'] = data['wav2vec2'].apply(lambda x: x.tolist())
 
 
-#create opensmile features
-opensmile = OpensmileExtractor()
-data = opensmile.process(data=df_data, output_column='opensmile')
+# #create opensmile features
+# opensmile = OpensmileExtractor()
+# data = opensmile.process(data=df_data, output_column='opensmile')
 
 
 # #create spectrogram features
@@ -73,18 +73,18 @@ data = opensmile.process(data=df_data, output_column='opensmile')
 # data['spectrogram'] = data['spectrogram'].apply(lambda x: x.tolist())
 
 
-#preprocess WAV2VEC2 sequence
-data.to_csv('iemocap_with_features_full.csv')
+# #preprocess WAV2VEC2 sequence
+# data.to_csv('iemocap_with_features_full.csv')
 
-# to opensmile pickle
-data = pd.read_csv('/Users/agnieszkalenart/Documents/mannheim/master_thesis/iemocap_with_features_full.csv')
-data['opensmile'] = data['opensmile'].apply(lambda x: ast.literal_eval(x))
-data['opensmile'] = data['opensmile'].apply(np.array)
-data['opensmile'] = data['opensmile'].apply(lambda x: x.reshape(6373,))
-opensmile_dict = dict(zip(data['Unnamed: 0'], data['opensmile']))
+# # to opensmile pickle
+# data = pd.read_csv('/Users/agnieszkalenart/Documents/mannheim/master_thesis/iemocap_with_features_full.csv')
+# data['opensmile'] = data['opensmile'].apply(lambda x: ast.literal_eval(x))
+# data['opensmile'] = data['opensmile'].apply(np.array)
+# data['opensmile'] = data['opensmile'].apply(lambda x: x.reshape(6373,))
+# opensmile_dict = dict(zip(data['Unnamed: 0'], data['opensmile']))
 
-with open('cmn_audio_opensmile.pickle', 'wb') as file:
-    pickle.dump(opensmile_dict, file)
+# with open('cmn_audio_opensmile.pickle', 'wb') as file:
+#     pickle.dump(opensmile_dict, file)
 
 
 # PadDP = PadDP()
@@ -101,15 +101,15 @@ with open('cmn_audio_opensmile.pickle', 'wb') as file:
 # data.to_csv('wav2vec2_emb.csv')
 
 
-# # Preprocess for cmn 
-# data['wavfile'] = data['wavfile'].str.replace('.wav', '')
-# df_data['wav2vec2'] = data['wav2vec2'].apply(lambda x: [item for sublist in x for item in sublist])
-# data['wav2vec2'] = data['wav2vec2'].apply(np.array)
-# cmn_emb = dict(zip(data['wavfile'], data['wav2vec2']))
+# Preprocess for cmn 
+data['wavfile'] = data['wavfile'].str.replace('.wav', '')
+df_data['wav2vec2'] = data['wav2vec2'].apply(lambda x: [item for sublist in x for item in sublist])
+data['wav2vec2'] = data['wav2vec2'].apply(np.array)
+cmn_emb = dict(zip(data['wavfile'], data['wav2vec2']))
 
-# # Save the dictionary as a pickle file
-# with open('cmn_audio_wav2vec2.pickle', 'wb') as file:
-#     pickle.dump(cmn_emb, file)
+# Save the dictionary as a pickle file
+with open('cmn_audio_wav2vec2.pickle', 'wb') as file:
+    pickle.dump(cmn_emb, file)
 
 # #leave-one-out
 # data = data 
