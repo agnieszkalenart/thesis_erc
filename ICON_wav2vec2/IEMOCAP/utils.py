@@ -5,7 +5,14 @@ from sklearn import model_selection, metrics
 
 TEXT_EMBEDDINGS = "/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/ICON_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_embeddings.pickle"
 VIDEO_EMBEDDINGS = "/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/ICON_wav2vec2/IEMOCAP/data/video/IEMOCAP_video_features.pickle"
-AUDIO_EMBEDDINGS = "/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/ICON_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_features.pickle"
+# orginal audio features
+# AUDIO_EMBEDDINGS = "/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/ICON_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_features.pickle"
+# audio embeddings with opensmile
+# AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/representations.pkl'
+# audio embeddings with wav2vec2 
+AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/representations_wav2vec2_pooledmean_max.pkl'
+
+
 
 trainID = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/trainID_new.pkl",'rb'), encoding="latin1")
 testID = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/testID_new.pkl",'rb'), encoding="latin1")

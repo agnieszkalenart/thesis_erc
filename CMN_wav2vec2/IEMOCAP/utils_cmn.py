@@ -5,15 +5,16 @@ from sklearn import model_selection, metrics
 
 TEXT_EMBEDDINGS = "/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_embeddings.pickle"
 #original audio embeddings
-#AUDIO_EMBEDDINGS = "/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_features.pickle"
-# audio embeddings with opensmile
-# AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/cmn_audio_opensmile_new.pickle'
-# audio embeddings with opensmile - 100 
-AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/representations_wav2vec2.pkl'
+# AUDIO_EMBEDDINGS = "/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_features.pickle"
+# audio embeddings with opensmile 100
+AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/representations_opensmile.pkl'
+# audio embeddings with wav2vec2 100 (cut to 400)
+# AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/representations_wav2vec2_400.pkl'
+# AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/representations_wav2vec2_pooledmean_max.pkl'
 
-trainID = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/trainID_new.pkl",'rb'), encoding="latin1")
-testID = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/testID_new.pkl",'rb'), encoding="latin1")
-valID,_ = model_selection.train_test_split(testID, test_size=.4, random_state=1227)
+trainID = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/trainID_new_filtered.pkl",'rb'), encoding="latin1")
+testID = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/testID_new_filtered.pkl",'rb'), encoding="latin1")
+trainID, valID = model_selection.train_test_split(trainID, test_size=.2, random_state=1227)
 # valID = testID
 
 transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")

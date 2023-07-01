@@ -11,14 +11,14 @@ import pickle
 import numpy as np
 import ast
 
-
-
 DATA_PATH = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/IEMOCAP'
 
 #read data
 iemocap_reader = IEMOCAPReader()
 df_data = iemocap_reader.process(data_path=DATA_PATH, min_duration=0.0, min_sad_frames_duration=0, sample=None,compute_speech_rate=True)
-print(df_data.loc[['Ses01F_impro04_M010']])
+
+df_data.to_csv('/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/iemocap.csv')
+# print(df_data.loc[['Ses01F_impro04_M010']])
 #pre-process data
 #relabel
 # relabel = Relabel()
@@ -30,36 +30,38 @@ print(df_data.loc[['Ses01F_impro04_M010']])
 # filter = Filter()
 # df_data = filter.process(df_data=df_data, column_filter=column, include_values=include_values)
 #label encoder
-column = 'emotion'
-new_column = 'classID'
-label_encoder = LabelEncoder()
-df_data, possible_labels = label_encoder.process(df_data=df_data, column=column, new_column=new_column)
+# column = 'emotion'
+# new_column = 'classID'
+# label_encoder = LabelEncoder()
+# df_data, possible_labels = label_encoder.process(df_data=df_data, column=column, new_column=new_column)
+
+
 
 #small data
 # df_data= df_data.head(5)
 
-#create wav2vec2 features
-wav2vec2_model_path = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/wav2vec2/wav2vec_small.pt'
-wav2vec2_dict_path = None
-normalization_axis = 1
-wav2vec2_padding_axis = 1
-max_size = 240000
-mode  = 'sequence'
-output_column = 'wav2vec2'
-layer = 'output'
-save_feature_files = True
+# #create wav2vec2 features
+# wav2vec2_model_path = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/wav2vec2/wav2vec_small.pt'
+# wav2vec2_dict_path = None
+# normalization_axis = 1
+# wav2vec2_padding_axis = 1
+# max_size = 240000
+# mode  = 'sequence'
+# output_column = 'wav2vec2'
+# layer = 'output'
+# save_feature_files = True
 
-wav2vec2 = Wav2Vec2Embeddings()
-model, cfg, task = wav2vec2.build_wav2vec_model(model_path=wav2vec2_model_path)
-data = wav2vec2.process(data = df_data,
-                model_path=wav2vec2_model_path,
-                 max_size=max_size,
-                 mode= mode,
-                 output_column=output_column,
-                 layer = layer,
-                 save_feature_files= save_feature_files)
+# wav2vec2 = Wav2Vec2Embeddings()
+# model, cfg, task = wav2vec2.build_wav2vec_model(model_path=wav2vec2_model_path)
+# data = wav2vec2.process(data = df_data,
+#                 model_path=wav2vec2_model_path,
+#                  max_size=max_size,
+#                  mode= mode,
+#                  output_column=output_column,
+#                  layer = layer,
+#                  save_feature_files= save_feature_files)
 
-data['wav2vec2'] = data['wav2vec2'].apply(lambda x: x.tolist())
+# data['wav2vec2'] = data['wav2vec2'].apply(lambda x: x.tolist())
 
 
 # #create opensmile features
@@ -101,15 +103,15 @@ data['wav2vec2'] = data['wav2vec2'].apply(lambda x: x.tolist())
 # data.to_csv('wav2vec2_emb.csv')
 
 
-# Preprocess for cmn 
-data['wavfile'] = data['wavfile'].str.replace('.wav', '')
-df_data['wav2vec2'] = data['wav2vec2'].apply(lambda x: [item for sublist in x for item in sublist])
-data['wav2vec2'] = data['wav2vec2'].apply(np.array)
-cmn_emb = dict(zip(data['wavfile'], data['wav2vec2']))
+# # Preprocess for cmn 
+# data['wavfile'] = data['wavfile'].str.replace('.wav', '')
+# df_data['wav2vec2'] = data['wav2vec2'].apply(lambda x: [item for sublist in x for item in sublist])
+# data['wav2vec2'] = data['wav2vec2'].apply(np.array)
+# cmn_emb = dict(zip(data['wavfile'], data['wav2vec2']))
 
-# Save the dictionary as a pickle file
-with open('cmn_audio_wav2vec2.pickle', 'wb') as file:
-    pickle.dump(cmn_emb, file)
+# # Save the dictionary as a pickle file
+# with open('cmn_audio_wav2vec2.pickle', 'wb') as file:
+#     pickle.dump(cmn_emb, file)
 
 # #leave-one-out
 # data = data 

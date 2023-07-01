@@ -21,7 +21,7 @@ session_conf = tf.compat.v1.ConfigProto(
 
 # Select appropriate config from the file config.py
 flags.DEFINE_string("mode", "textaudio", "which modality")
-flags.DEFINE_boolean("context", True, "which kind of features to choose")
+flags.DEFINE_boolean("context", False, "which kind of features to choose")
 flags.DEFINE_string("nonlin_func", "tf.nn.tanh", "type of nonlinearity")
 flags.DEFINE_float("learning_rate", 0.001, "Learning rate for SGD.")
 flags.DEFINE_float("anneal_rate", 60, "Number of epochs between halving the learnign rate.")
