@@ -3,17 +3,17 @@ import pandas as pd
 import pickle
 from sklearn import model_selection, metrics
 
-TEXT_EMBEDDINGS = "/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_embeddings.pickle"
+TEXT_EMBEDDINGS = "thesis_erc/CMN_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_embeddings.pickle"
 #original audio embeddings
 # AUDIO_EMBEDDINGS = "/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_features.pickle"
 # audio embeddings with opensmile 100
-AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/representations_opensmile.pkl'
+AUDIO_EMBEDDINGS = 'thesis_erc/features/representations_opensmile.pkl'
 # audio embeddings with wav2vec2 100 (cut to 400)
 # AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/representations_wav2vec2_400.pkl'
 # AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/representations_wav2vec2_pooledmean_max.pkl'
 
-trainID = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/trainID_new_filtered.pkl",'rb'), encoding="latin1")
-testID = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/testID_new_filtered.pkl",'rb'), encoding="latin1")
+trainID = pickle.load(open("thesis_erc/CMN_wav2vec2/IEMOCAP/data/trainID_new_filtered.pkl",'rb'), encoding="latin1")
+testID = pickle.load(open("thesis_erc/CMN_wav2vec2/IEMOCAP/data/testID_new_filtered.pkl",'rb'), encoding="latin1")
 trainID, valID = model_selection.train_test_split(trainID, test_size=.2, random_state=1227)
 # valID = testID
 
@@ -78,13 +78,13 @@ def loadData(FLAGS):
 	text_transcripts_emb, text_own_history_emb, text_other_history_emb = pickle.load( open(TEXT_EMBEDDINGS, 'rb'), encoding="latin1")
 	if FLAGS.context:
 		print("loading contextual features")
-		text_emb = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/conv-emotion/CMN/IEMOCAP/data/text/IEMOCAP_text_context.pickle", 'rb'), encoding="latin1")
+		text_emb = pickle.load(open("thesis_erc/CMN_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_context.pickle", 'rb'), encoding="latin1")
 		text_transcripts_emb, text_own_history_emb, text_other_history_emb = updateDictText(text_transcripts_emb, text_own_history_emb, text_other_history_emb, text_emb)
 
 	## Loading Audio features
 	audio_emb = pickle.load(open(AUDIO_EMBEDDINGS, 'rb'), encoding="latin1")
 	if FLAGS.context:
-		audio_emb_context = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/conv-emotion/CMN/IEMOCAP/data/audio/IEMOCAP_audio_context.pickle", 'rb'), encoding="latin1")
+		audio_emb_context = pickle.load(open("thesis_erc/CMN_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_context.pickle", 'rb'), encoding="latin1")
 		for ID in audio_emb.keys():
 			if ID in audio_emb_context.keys():
 				audio_emb[ID] = audio_emb_context[ID]
