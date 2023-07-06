@@ -2,9 +2,10 @@ from IEMOCAP_reader import IEMOCAPReader
 import pickle
 import pandas as pd
 
-DATA_PATH = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/IEMOCAP'
+DATA_PATH = '/Users/mareklukasikbackup/Aga/IEMOCAP_full_release'
+OUTPUT_PATH = 'features/iemocap_with_history.csv'
 
-transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
+transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 
 # add own history ids to dataframe
 own_history_df = pd.DataFrame.from_dict(own_historyID, orient='index')
@@ -48,4 +49,4 @@ df_data['own_history_sentences'] = df_data.apply(lambda row: get_own_history_sen
 df_data['other_history_sentences'] = df_data.apply(lambda row: get_other_history_sentences(row.name), axis=1)
 
 
-df_data.to_csv('/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/iemocap_with_history.csv')
+df_data.to_csv(OUTPUT_PATH)

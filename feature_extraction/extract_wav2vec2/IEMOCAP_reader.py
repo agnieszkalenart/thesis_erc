@@ -145,7 +145,15 @@ class IEMOCAPReader():
         #df_data.dropna(inplace=True)
 
         # Full sentences
-        df_data['sentences'] = df_data.words_data.map(lambda x: ' '.join(map(lambda x: x[2], x)))
+        # df_data['sentences'] = df_data.words_data.map(lambda x: ' '.join(map(lambda x: x[2], x)))
+        df_data['sentences'] = ''
+        for index, row in df_data.iterrows():
+            words_data = row['words_data']
+            if isinstance(words_data, list):
+                sentences = ' '.join([word[2] for word in words_data])
+                df_data.at[index, 'sentences'] = sentences
+            else:
+                df_data.at[index, 'sentences'] = ''
 
         print('Removing ' + str((df_data.duration <= min_duration).sum()) +
                     ' samples with less duration than ' + str(min_duration) + ' seconds')

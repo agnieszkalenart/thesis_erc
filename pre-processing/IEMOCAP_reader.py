@@ -145,6 +145,7 @@ class IEMOCAPReader():
         #df_data.dropna(inplace=True)
 
         # Full sentences
+        df_data['words_data'] = df_data['words_data'].fillna('')
         df_data['sentences'] = df_data.words_data.map(lambda x: ' '.join(map(lambda x: x[2], x)))
 
         print('Removing ' + str((df_data.duration <= min_duration).sum()) +
