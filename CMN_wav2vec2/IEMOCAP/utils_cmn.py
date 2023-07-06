@@ -3,22 +3,24 @@ import pandas as pd
 import pickle
 from sklearn import model_selection, metrics
 
-TEXT_EMBEDDINGS = "thesis_erc/CMN_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_embeddings.pickle"
+SMALL = False
+TEXT_EMBEDDINGS = "CMN_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_embeddings.pickle"
 #original audio embeddings
-# AUDIO_EMBEDDINGS = "/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_features.pickle"
+# AUDIO_EMBEDDINGS = "CMN_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_features.pickle"
 # audio embeddings with opensmile 100
-AUDIO_EMBEDDINGS = 'thesis_erc/features/representations_opensmile.pkl'
-# audio embeddings with wav2vec2 100 (cut to 400)
-# AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/representations_wav2vec2_400.pkl'
-# AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/representations_wav2vec2_pooledmean_max.pkl'
+# AUDIO_EMBEDDINGS = 'thesis_erc/features/representations_opensmile.pkl'
+# audio embeddings with wav2vec2 100 
+AUDIO_EMBEDDINGS = 'features/representations_wav2vec2_pooled_no_pooling.pkl'
 
-trainID = pickle.load(open("thesis_erc/CMN_wav2vec2/IEMOCAP/data/trainID_new_filtered.pkl",'rb'), encoding="latin1")
-testID = pickle.load(open("thesis_erc/CMN_wav2vec2/IEMOCAP/data/testID_new_filtered.pkl",'rb'), encoding="latin1")
+if SMALL:
+	trainID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/trainID_new_filtered.pkl",'rb'), encoding="latin1")
+	testID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/testID_new_filtered.pkl",'rb'), encoding="latin1")
+else:
+	trainID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/trainID_new.pkl",'rb'), encoding="latin1")
+	testID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/testID_new.pkl",'rb'), encoding="latin1")
 trainID, valID = model_selection.train_test_split(trainID, test_size=.2, random_state=1227)
-# valID = testID
 
-transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
-# label_idx = {'hap':0, 'sad':1, 'neu':2, 'ang':3, 'exc':4, 'fru':5, 'xxx':6, 'sur':7, 'oth':8, 'dis':9, 'fea':10}
+transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 label_idx = {'hap':0, 'sad':1, 'neu':2, 'ang':3, 'exc':4, 'fru':5 }
 
 
@@ -136,13 +138,12 @@ def loadData(FLAGS):
 			textOwnHistoryEmb = np.asarray(text_own_history_emb[ID])
 			textOtherHistoryEmb = np.asarray(text_other_history_emb[ID])
 
-			print(ID)
 
-			print(own_historyID[ID])
-
-			audioOwnHistoryEmb = np.asarray( [audio_emb[own_historyID[ID][idx]] for idx in range(len(own_historyID[ID]))]  )
-			audioOtherHistoryEmb = np.asarray( [audio_emb[other_historyID[ID][idx]] for idx in range(len(other_historyID[ID]))]  )
-
+			# audioOwnHistoryEmb = np.asarray( [audio_emb[own_historyID[ID][idx]] for idx in range(len(own_historyID[ID]))]  )
+			audioOwnHistoryEmb = np.asarray([audio_emb[own_historyID[ID][idx]] if own_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(own_historyID[ID]))])
+			
+			# audioOtherHistoryEmb = np.asarray( [audio_emb[other_historyID[ID][idx]] for idx in range(len(other_historyID[ID]))]  )
+			audioOtherHistoryEmb = np.asarray([audio_emb[other_historyID[ID][idx]] if other_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(other_historyID[ID]))])
 
 			for idx, rank in enumerate(own_history_rank):
 				if rank < FLAGS.timesteps:
@@ -190,8 +191,12 @@ def loadData(FLAGS):
 			textOwnHistoryEmb = np.asarray(text_own_history_emb[ID])
 			textOtherHistoryEmb = np.asarray(text_other_history_emb[ID])
 
-			audioOwnHistoryEmb = np.asarray( [audio_emb[own_historyID[ID][idx]] for idx in range(len(own_historyID[ID]))]  )
-			audioOtherHistoryEmb = np.asarray( [audio_emb[other_historyID[ID][idx]] for idx in range(len(other_historyID[ID]))]  )
+			# audioOwnHistoryEmb = np.asarray( [audio_emb[own_historyID[ID][idx]] for idx in range(len(own_historyID[ID]))]  )
+			audioOwnHistoryEmb = np.asarray([audio_emb[own_historyID[ID][idx]] if own_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(own_historyID[ID]))])
+			
+			# audioOtherHistoryEmb = np.asarray( [audio_emb[other_historyID[ID][idx]] for idx in range(len(other_historyID[ID]))]  )
+			audioOtherHistoryEmb = np.asarray([audio_emb[other_historyID[ID][idx]] if other_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(other_historyID[ID]))])
+
 
 
 			for idx, rank in enumerate(own_history_rank):
@@ -242,8 +247,11 @@ def loadData(FLAGS):
 			textOwnHistoryEmb = np.asarray(text_own_history_emb[ID])
 			textOtherHistoryEmb = np.asarray(text_other_history_emb[ID])
 
-			audioOwnHistoryEmb = np.asarray( [audio_emb[own_historyID[ID][idx]] for idx in range(len(own_historyID[ID]))]  )
-			audioOtherHistoryEmb = np.asarray( [audio_emb[other_historyID[ID][idx]] for idx in range(len(other_historyID[ID]))]  )
+			# audioOwnHistoryEmb = np.asarray( [audio_emb[own_historyID[ID][idx]] for idx in range(len(own_historyID[ID]))]  )
+			audioOwnHistoryEmb = np.asarray([audio_emb[own_historyID[ID][idx]] if own_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(own_historyID[ID]))])
+			# audioOtherHistoryEmb = np.asarray( [audio_emb[other_historyID[ID][idx]] for idx in range(len(other_historyID[ID]))]  )
+			audioOtherHistoryEmb = np.asarray([audio_emb[other_historyID[ID][idx]] if other_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(other_historyID[ID]))])
+
 
 
 			for idx, rank in enumerate(own_history_rank):

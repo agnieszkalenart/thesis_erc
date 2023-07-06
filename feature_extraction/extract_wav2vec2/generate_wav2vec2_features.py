@@ -13,14 +13,16 @@ import ast
 
 
 
-DATA_PATH = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/IEMOCAP'
+DATA_PATH = '/Users/mareklukasikbackup/Aga/IEMOCAP_full_release'
+MODEL_PATH = '/Users/mareklukasikbackup/Aga/pre-trained_models/wav2vec_small.pt'
+
 
 #read data
 iemocap_reader = IEMOCAPReader()
 df_data = iemocap_reader.process(data_path=DATA_PATH, min_duration=0.0, min_sad_frames_duration=0, sample=None,compute_speech_rate=True)
 
 #create wav2vec2 features
-wav2vec2_model_path = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/wav2vec2/wav2vec_small.pt'
+wav2vec2_model_path = MODEL_PATH
 wav2vec2_dict_path = None
 normalization_axis = 1
 wav2vec2_padding_axis = 1
@@ -46,5 +48,5 @@ cmn_emb = dict(zip(data.index, data['wav2vec2']))
 
 
 # Save the dictionary as a pickle file
-with open('/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/cmn_audio_wav2vec2.pickle', 'wb') as file:
+with open('features/cmn_audio_wav2vec2.pickle', 'wb') as file:
     pickle.dump(cmn_emb, file)

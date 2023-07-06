@@ -19,78 +19,72 @@ from transformers import AutoTokenizer, AutoModel
 import pickle
 
 # Load the IEMOCAP dataset
-df = pd.read_csv('/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/iemocap.csv')
-
-# Load history of utterances
-transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
+df = pd.read_csv('features/iemocap_with_history.csv')
 
 df = df.rename(columns={'Unnamed: 0': 'indices'})
 df = df.rename(columns={'emotion': 'labels'})
 df = df.rename(columns={'sentences': 'utterances'})
+df['labels'] = df['labels'].fillna('')
 
 # Drop all unnecessary columns
-columns_to_keep = ['indices', 'labels', 'utterances']
+columns_to_keep = ['indices', 'labels', 'utterances', 'own_history_sentences', 'other_history_sentences']
 df = df.drop(columns=[col for col in df.columns if col not in columns_to_keep])
 
 # encode labels
-label_idx = {'happiness':0, 'sadness':1, 'neutral':2, 'anger':3, 'excited':4, 'frustration':5, 'unassigned':6, 'surprise':6, 'other':6, 'fear':6, 'disgusted':6 }
+label_idx = {'happiness':0, 'sadness':1, 'neutral':2, 'anger':3, 'excited':4, 'frustration':5, 'unassigned':6, 'surprise':6, 'other':6, 'fear':6, 'disgusted':6, '':6 }
 df['labels'] = df['labels'].apply(lambda x: label_idx[x])
 
 # drop rows with label 6
 df = df[df['labels'] != 6]
 
 # Create sentence and label lists
-sentences = df.utterances.values
+transcription = df.utterances.values
+transcription_own_history = df.own_history_sentences.values
+transcription_other_history = df.other_history_sentences.values
 indices = df.indices.values
 
-# # We need to add special tokens at the beginning and end of each sentence for BERT to work properly
-# sentences = ["[CLS] " + sentence + " [SEP]" for sentence in sentences]
-# labels = df.labels.values
-
-tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
-
-# tokenized_texts = [tokenizer.tokenize(sent) for sent in sentences]
-# print ("Tokenize the first sentence:")
-# print (tokenized_texts[0])
-
-# MAX_LEN = 87
-
-# # Use the BERT tokenizer to convert the tokens to their index numbers in the BERT vocabulary
-# input_ids = [tokenizer.convert_tokens_to_ids(x) for x in tokenized_texts]
-
-# # Pad our input tokens
-# input_ids = pad_sequences(input_ids, maxlen=MAX_LEN, dtype="long", truncating="post", padding="post")
-
-# # Create attention masks
-# attention_masks = []
-
-# # Create a mask of 1s for each token followed by 0s for padding
-# for seq in input_ids:
-#   seq_mask = [float(i>0) for i in seq]
-#   attention_masks.append(seq_mask)
+# tokenizer = BertTokenizer.from_pretrained('bert-base-uncased', do_lower_case=True)
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
 model = AutoModel.from_pretrained("distilbert-base-uncased").to(device)
 
-tokenized = tokenizer(sentences.tolist(), padding = True, truncation = True, return_tensors="pt")
+transcription_tokenized = tokenizer(transcription.tolist(), padding = True, truncation = True, return_tensors="pt")
+# transcription_own_history_tokenized = tokenizer(transcription.tolist(), padding = True, truncation = True, return_tensors="pt")
+# transcription_other_history_tokenized = tokenizer(transcription.tolist(), padding = True, truncation = True, return_tensors="pt")
+
+print("checkpoint: tokenization done")
 
 with torch.no_grad():
-  hidden = model(**tokenized) #dim : [batch_size(nr_sentences), tokens, emb_dim]
+  transcription_hidden = model(**transcription_tokenized) #dim : [batch_size(nr_sentences), tokens, emb_dim]
+  # transcription_own_history_hidden = model(**transcription_own_history_tokenized) #dim : [batch_size(nr_sentences), tokens, emb_dim]
+  # transcription_other_history_hidden = model(**transcription_other_history_tokenized) #dim : [batch_size(nr_sentences), tokens, emb_dim]
+
+print("checkpoint: model done")
+
 
 #get only the [CLS] hidden states
-cls_token = hidden.last_hidden_state[:,0,:].numpy()
+cls_transcription = transcription_hidden.last_hidden_state[:,0,:].numpy()
+# cls_transcription_own_history = transcription_own_history_hidden.last_hidden_state[:,0,:].numpy()
+# cls_transcription_other_history = transcription_other_history_hidden.last_hidden_state[:,0,:].numpy()
 
-print(cls_token.shape)
-print(cls_token)
+print("checkpoint: cls extraction done")
 
-bert_emb = dict(zip(indices, cls_token))
+
+transcription_emb = dict(zip(indices, cls_transcription))
+# transcription_own_history_emb = dict(zip(indices, cls_transcription_own_history))
+# transcription_other_history_emb = dict(zip(indices, cls_transcription_other_history))
+
+print("checkpoint: dict created")
 
 
 # Save the dictionary as a pickle file
-with open('/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/cmn_text_bert.pickle', 'wb') as file:
-    pickle.dump(bert_emb, file)
+with open('/features/cmn_text_bert.pickle', 'wb') as file:
+    pickle.dump([transcription_emb], 
+                #  transcription_own_history_emb,
+                #  transcription_other_history_emb],
+                 file)
 
 
 # # Function to extract words from a sentence

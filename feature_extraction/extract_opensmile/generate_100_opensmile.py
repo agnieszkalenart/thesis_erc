@@ -11,14 +11,14 @@ from tensorflow.keras.models import Model
 
 CROSSVALIDATION = False
 
-AUDIO_EMBEDDINGS = '/Users/agnieszkalenart/Documents/mannheim/master_thesis/cmn_audio_opensmile_new.pickle'
-trainID = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/trainID_new_filtered.pkl",'rb'), encoding="latin1")
-testID = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/testID_new_filtered.pkl",'rb'), encoding="latin1")
+AUDIO_EMBEDDINGS = 'features/cmn_audio_opensmile.pickle'
+trainID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/trainID_new.pkl",'rb'), encoding="latin1")
+testID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/testID_new.pkl",'rb'), encoding="latin1")
 valID,_ = model_selection.train_test_split(trainID, test_size=.2, random_state=1227)
 
 audio_emb = pickle.load(open(AUDIO_EMBEDDINGS, 'rb'), encoding="latin1")
 df = pd.DataFrame.from_dict(audio_emb, orient='index')
-transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
+transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 
 # filter 'xxx', 'sur', 'oth', 'dis', 'fea' from labels out
 todrop_values = ['xxx', 'sur', 'oth', 'dis', 'fea']
