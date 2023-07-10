@@ -4,13 +4,15 @@ import pickle
 from sklearn import model_selection, metrics
 
 SMALL = False
-TEXT_EMBEDDINGS = "CMN_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_embeddings.pickle"
+# TEXT_EMBEDDINGS = "CMN_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_embeddings.pickle"
+# TEXT_EMBEDDINGS = 'features/cmn_text_bert.pickle'
+TEXT_EMBEDDINGS = 'features/cmn_text_bert_with_history.pickle'
 #original audio embeddings
 # AUDIO_EMBEDDINGS = "CMN_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_features.pickle"
 # audio embeddings with opensmile 100
 # AUDIO_EMBEDDINGS = 'thesis_erc/features/representations_opensmile.pkl'
 # audio embeddings with wav2vec2 100 
-AUDIO_EMBEDDINGS = 'features/representations_wav2vec2_pooled_no_pooling.pkl'
+AUDIO_EMBEDDINGS = 'features/representations_wav2vec2_mean_none.pkl'
 
 if SMALL:
 	trainID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/trainID_new_filtered.pkl",'rb'), encoding="latin1")
@@ -23,6 +25,8 @@ trainID, valID = model_selection.train_test_split(trainID, test_size=.2, random_
 transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 label_idx = {'hap':0, 'sad':1, 'neu':2, 'ang':3, 'exc':4, 'fru':5 }
 
+TEXT_DIM = 768
+AUDIO_DIM = 768
 
 def oneHot(trainLabels, valLabels, testLabels):
 	
@@ -92,9 +96,10 @@ def loadData(FLAGS):
 				audio_emb[ID] = audio_emb_context[ID]
 	
 	## Text Embeddings for the queries
-	text_trainQueries = np.asarray([text_transcripts_emb[ID] for ID in trainID])
-	text_valQueries = np.asarray([text_transcripts_emb[ID] for ID in valID])
-	text_testQueries = np.asarray([text_transcripts_emb[ID] for ID in testID])
+	text_trainQueries = np.asarray([text_transcripts_emb[ID] if ID in text_transcripts_emb else np.zeros(TEXT_DIM) for ID in trainID])
+	text_valQueries = np.asarray([text_transcripts_emb[ID] if ID in text_transcripts_emb else np.zeros(TEXT_DIM) for ID in valID])
+	text_testQueries = np.asarray([text_transcripts_emb[ID] if ID in text_transcripts_emb else np.zeros(TEXT_DIM) for ID in testID])
+
 
 	## Audio Embeddings for the queries
 	audio_trainQueries = np.asarray([audio_emb[ID] for ID in trainID])
@@ -135,15 +140,15 @@ def loadData(FLAGS):
 			own_history_rank = [maxRank - currRank for currRank in own_historyID_rank[ID]]
 			other_history_rank = [maxRank - currRank for currRank in other_historyID_rank[ID]] 
 			
-			textOwnHistoryEmb = np.asarray(text_own_history_emb[ID])
-			textOtherHistoryEmb = np.asarray(text_other_history_emb[ID])
+			textOwnHistoryEmb = np.asarray(text_own_history_emb[ID] if ID in text_own_history_emb else np.zeros(TEXT_DIM))
+			textOtherHistoryEmb = np.asarray(text_other_history_emb[ID] if ID in text_other_history_emb else np.zeros(TEXT_DIM))
 
 
 			# audioOwnHistoryEmb = np.asarray( [audio_emb[own_historyID[ID][idx]] for idx in range(len(own_historyID[ID]))]  )
-			audioOwnHistoryEmb = np.asarray([audio_emb[own_historyID[ID][idx]] if own_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(own_historyID[ID]))])
+			audioOwnHistoryEmb = np.asarray([audio_emb[own_historyID[ID][idx]] if own_historyID[ID][idx] in audio_emb else np.zeros(AUDIO_DIM) for idx in range(len(own_historyID[ID]))])
 			
 			# audioOtherHistoryEmb = np.asarray( [audio_emb[other_historyID[ID][idx]] for idx in range(len(other_historyID[ID]))]  )
-			audioOtherHistoryEmb = np.asarray([audio_emb[other_historyID[ID][idx]] if other_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(other_historyID[ID]))])
+			audioOtherHistoryEmb = np.asarray([audio_emb[other_historyID[ID][idx]] if other_historyID[ID][idx] in audio_emb else np.zeros(AUDIO_DIM) for idx in range(len(other_historyID[ID]))])
 
 			for idx, rank in enumerate(own_history_rank):
 				if rank < FLAGS.timesteps:
@@ -164,6 +169,8 @@ def loadData(FLAGS):
 					if FLAGS.mode == "text":
 						trainOtherHistory[iddx,rank] = textOtherHistoryEmb[idx]
 					elif FLAGS.mode == "audio":
+						if audioOtherHistoryEmb[idx].shape != (768,):
+							print(idx, audioOtherHistoryEmb[idx].shape)
 						trainOtherHistory[iddx,rank] = audioOtherHistoryEmb[idx]
 					elif FLAGS.mode == "textaudio":
 						trainOtherHistory[iddx,rank] = np.concatenate((textOtherHistoryEmb[idx], audioOtherHistoryEmb[idx]))
@@ -188,14 +195,14 @@ def loadData(FLAGS):
 			own_history_rank = [maxRank - currRank for currRank in own_historyID_rank[ID]]
 			other_history_rank = [maxRank - currRank for currRank in other_historyID_rank[ID]] 
 			
-			textOwnHistoryEmb = np.asarray(text_own_history_emb[ID])
-			textOtherHistoryEmb = np.asarray(text_other_history_emb[ID])
+			textOwnHistoryEmb = np.asarray(text_own_history_emb[ID] if ID in text_own_history_emb else np.zeros(TEXT_DIM))
+			textOtherHistoryEmb = np.asarray(text_other_history_emb[ID] if ID in text_other_history_emb else np.zeros(TEXT_DIM))
 
 			# audioOwnHistoryEmb = np.asarray( [audio_emb[own_historyID[ID][idx]] for idx in range(len(own_historyID[ID]))]  )
-			audioOwnHistoryEmb = np.asarray([audio_emb[own_historyID[ID][idx]] if own_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(own_historyID[ID]))])
+			audioOwnHistoryEmb = np.asarray([audio_emb[own_historyID[ID][idx]] if own_historyID[ID][idx] in audio_emb else np.zeros(AUDIO_DIM) for idx in range(len(own_historyID[ID]))])
 			
 			# audioOtherHistoryEmb = np.asarray( [audio_emb[other_historyID[ID][idx]] for idx in range(len(other_historyID[ID]))]  )
-			audioOtherHistoryEmb = np.asarray([audio_emb[other_historyID[ID][idx]] if other_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(other_historyID[ID]))])
+			audioOtherHistoryEmb = np.asarray([audio_emb[other_historyID[ID][idx]] if other_historyID[ID][idx] in audio_emb else np.zeros(AUDIO_DIM) for idx in range(len(other_historyID[ID]))])
 
 
 
@@ -248,9 +255,9 @@ def loadData(FLAGS):
 			textOtherHistoryEmb = np.asarray(text_other_history_emb[ID])
 
 			# audioOwnHistoryEmb = np.asarray( [audio_emb[own_historyID[ID][idx]] for idx in range(len(own_historyID[ID]))]  )
-			audioOwnHistoryEmb = np.asarray([audio_emb[own_historyID[ID][idx]] if own_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(own_historyID[ID]))])
+			audioOwnHistoryEmb = np.asarray([audio_emb[own_historyID[ID][idx]] if own_historyID[ID][idx] in audio_emb else np.zeros(AUDIO_DIM) for idx in range(len(own_historyID[ID]))])
 			# audioOtherHistoryEmb = np.asarray( [audio_emb[other_historyID[ID][idx]] for idx in range(len(other_historyID[ID]))]  )
-			audioOtherHistoryEmb = np.asarray([audio_emb[other_historyID[ID][idx]] if other_historyID[ID][idx] in audio_emb else np.zeros(100) for idx in range(len(other_historyID[ID]))])
+			audioOtherHistoryEmb = np.asarray([audio_emb[other_historyID[ID][idx]] if other_historyID[ID][idx] in audio_emb else np.zeros(AUDIO_DIM) for idx in range(len(other_historyID[ID]))])
 
 
 
