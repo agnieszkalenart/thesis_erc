@@ -22,7 +22,7 @@ session_conf = tf.compat.v1.ConfigProto(
       gpu_options=tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.7))
 
 # Select appropriate config from the file config.py
-flags.DEFINE_string("mode", "audio", "which modality")
+flags.DEFINE_string("mode", "textaudio", "which modality")
 flags.DEFINE_boolean("context", False, "which kind of features to choose")
 flags.DEFINE_string("nonlin_func", "nn.tanh", "type of nonlinearity")
 flags.DEFINE_float("learning_rate", 0.001, "Learning rate for SGD.")

@@ -50,38 +50,37 @@ if METHOD == 'mean_max':
     df['feature_array'] = df.apply(lambda x: np.concatenate((x['feature_array_mean'], x['feature_array_max'])), axis=1)
     df.drop(['feature_array_mean', 'feature_array_max'], axis=1, inplace=True)
 
-if METHOD == 'no_pooling':
-    desired_shape = (200, df['feature_array'][0].shape[1])
-
+    
 indices = df.index
-
-
 # filter 'xxx', 'sur', 'oth', 'dis', 'fea' from df out
 todrop_values = ['xxx', 'sur', 'oth', 'dis', 'fea']
 todrop_keys = [key for key, value in labels.items() if value in todrop_values]
 dict_filtered_out = {}
 common_indexes = set(df.index).intersection(todrop_keys)
 df = df.drop(common_indexes)
+#filter out labels
+for key in todrop_keys:
+    if key in labels:
+        del labels[key]
+# create dict for empty arrays
+for key in todrop_keys:
+    if key in df.index:
+        dict_filtered_out[key] = np.zeros(100)
 
-if EXTRACTION == 'fcn':
-    #filter out labels
-    for key in todrop_keys:
-        if key in labels:
-            del labels[key]
-    # create dict for empty arrays
-    for key in todrop_keys:
-        if key in df.index:
-            dict_filtered_out[key] = np.zeros(100)
+if METHOD == 'no_pooling' and EXTRACTION == 'fcn':
+    desired_shape = (200, df['feature_array'][0].shape[1])
+
     # Function to pad or trim the array to the desired shape
     def resize_array(arr):
         resized_arr = np.zeros(desired_shape)
         resized_arr[:arr.shape[0], :arr.shape[1]] = arr[:desired_shape[0], :desired_shape[1]]
         resized_arr = resized_arr.ravel()
-
         return resized_arr
 
     df['feature_array'] = df['feature_array'].apply(resize_array)
 
+if EXTRACTION == 'fcn':
+    
     # Function to extract values from the array and create separate columns
     def extract_values(row):
         return pd.Series(row[0])
