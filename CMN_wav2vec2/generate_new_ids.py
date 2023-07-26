@@ -1,6 +1,7 @@
 import pickle
 import random
 
+AUDIO_EMBEDDINGS_OS = 'features/representations_opensmile.pkl'
 AUDIO_EMBEDDINGS = 'features/cmn_audio_wav2vec2.pickle'
 TEXT_EMBEDDINGS = 'features/cmn_text_bert.pickle'
 TRAIN_IDS = 'CMN_wav2vec2/IEMOCAP/data/trainID.pkl'
@@ -8,6 +9,7 @@ TEST_IDS = 'CMN_wav2vec2/IEMOCAP/data/testID.pkl'
 
 # load data
 audio_emb = pickle.load(open(AUDIO_EMBEDDINGS, 'rb'), encoding="latin1")
+audio_emb_os = pickle.load(open(AUDIO_EMBEDDINGS_OS, 'rb'), encoding="latin1")
 audio_emb_ids = list(audio_emb.keys())
 text_emb, _, _ = pickle.load(open(TEXT_EMBEDDINGS, 'rb'), encoding="latin1") 
 
@@ -23,8 +25,8 @@ print(len(train_ids))
 print(len(test_ids))
 
 # filter train ids and test ids that are in audio emb
-train_ids = [id for id in train_ids if id in audio_emb.keys() and id in text_emb.keys()]
-test_ids = [id for id in test_ids if id in audio_emb.keys() and id in text_emb.keys()]
+train_ids = [id for id in train_ids if id in audio_emb.keys() and id in audio_emb_os.keys() and id in text_emb.keys()]
+test_ids = [id for id in test_ids if id in audio_emb.keys() and id in audio_emb_os.keys() and id in text_emb.keys()]
 
 # check lengths
 

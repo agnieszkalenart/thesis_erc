@@ -30,7 +30,7 @@ transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_h
 # choose the desired method: 'mean',  'max', 'mean_max', 'no_pooling'
 METHOD = 'mean'
 # choose the desired model: 'fcn', 'none'
-EXTRACTION = 'none'
+EXTRACTION = 'fcn'
 
 def mean_pooling(tuple):
     sum = np.sum(tuple, axis=0)
@@ -120,7 +120,6 @@ if EXTRACTION == 'fcn':
     # Define the neural network model
     model = Sequential()
     model.add(Dense(100, activation='relu', input_shape=(X_train.shape[1],)))
-    model.add(Dense(100, activation='relu'))
     model.add(Dense(len(labels.unique()), activation='softmax'))
 
     # Compile the model
@@ -170,5 +169,5 @@ if EXTRACTION == 'none':
 
 # Save the representations as a pickle file
 
-with open('features/representations_wav2vec2_' + METHOD + '_' + EXTRACTION +'.pkl', 'wb') as f:
+with open('features/representations_wav2vec2_' + METHOD + '_' + EXTRACTION +'_new.pkl', 'wb') as f:
     pickle.dump(representations, f)
