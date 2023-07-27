@@ -1,23 +1,26 @@
 import re
 import pandas as pd
 import numpy as np
-import tensorflow as tf
-from tensorflow.keras import layers
-from sklearn.model_selection import train_test_split
+# import tensorflow as tf
+# from tensorflow.keras import layers
+# from sklearn.model_selection import train_test_split
 import torch
-from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
-from tensorflow.keras.preprocessing.sequence import pad_sequences
-from sklearn.model_selection import train_test_split
-from pytorch_pretrained_bert import BertTokenizer, BertConfig
-from pytorch_pretrained_bert import BertAdam, BertForSequenceClassification
-from tqdm import tqdm, trange
+# from torch.utils.data import TensorDataset, DataLoader, RandomSampler, SequentialSampler
+# from tensorflow.keras.preprocessing.sequence import pad_sequences
+# from sklearn.model_selection import train_test_split
+# from pytorch_pretrained_bert import BertTokenizer, BertConfig
+# from pytorch_pretrained_bert import BertAdam, BertForSequenceClassification
+# from tqdm import tqdm, trange
 import pandas as pd
-import io
+# import io
 import numpy as np
-import matplotlib.pyplot as plt
+# import matplotlib.pyplot as plt
 from transformers import AutoTokenizer, AutoModel
 import pickle
 import ast
+
+# select model from: 'distilbert', 'roberta'
+MODEL = 'roberta'
 
 # Load the IEMOCAP dataset
 df = pd.read_csv('features/iemocap_with_history.csv')
@@ -76,8 +79,12 @@ own_history_rank = df.own_history_rank.values
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
-model = AutoModel.from_pretrained("distilbert-base-uncased").to(device)
+if MODEL == 'distilbert':
+	tokenizer = AutoTokenizer.from_pretrained("distilbert-base-uncased")
+	model = AutoModel.from_pretrained("distilbert-base-uncased").to(device)
+if MODEL == 'roberta':
+	tokenizer = AutoTokenizer.from_pretrained("roberta-base")
+	model = AutoModel.from_pretrained("roberta-base").to(device)
 
 transcription_tokenized = tokenizer(transcription.tolist(), padding = True, truncation = True, return_tensors="pt")
 # transcription_own_history_tokenized = tokenizer(transcription.tolist(), padding = True, truncation = True, return_tensors="pt")
@@ -133,7 +140,7 @@ transcription_own_history_emb = dict(zip(indices, transcription_own_history_emb)
 transcription_other_history_emb = dict(zip(indices, transcription_other_history_emb))
 
 # Save the dictionary as a pickle file
-with open('features/cmn_text_bert_with_history.pickle', 'wb') as file:
+with open('features/cmn_text_bert_with_history_'+MODEL+'.pickle', 'wb') as file:
     pickle.dump([transcription_emb, 
                 transcription_own_history_emb,
                 transcription_other_history_emb],
