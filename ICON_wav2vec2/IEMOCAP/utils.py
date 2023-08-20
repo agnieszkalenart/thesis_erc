@@ -3,14 +3,14 @@ import pandas as pd
 import pickle
 from sklearn import model_selection, metrics
 
-TEXT_EMBEDDINGS = "features/cmn_text_bert_with_history.pickle"
+TEXT_EMBEDDINGS = "features/cmn_text_bert_with_history_representations200.pickle"
 # TEXT_EMBEDDINGS = "ICON_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_embeddings.pickle"
 # orginal audio features
-AUDIO_EMBEDDINGS = "ICON_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_features.pickle"
+# AUDIO_EMBEDDINGS = "ICON_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_features.pickle"
 # audio embeddings with opensmile
 # AUDIO_EMBEDDINGS = 'features/representations_wav2vec2_mean_max_fcn.pkl'
 # audio embeddings with wav2vec2 
-AUDIO_EMBEDDINGS = 'features/representations_wav2vec2_mean_none.pkl'
+AUDIO_EMBEDDINGS = 'features/representations_wav2vec2_opensmile.pkl'
 
 
 
@@ -22,8 +22,8 @@ valID,_ = model_selection.train_test_split(testID, test_size=.4, random_state=12
 transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 label_idx = {'hap':0, 'sad':1, 'neu':2, 'ang':3, 'exc':4, 'fru':5}
 
-TEXT_DIM = 768
-AUDIO_DIM = 768
+TEXT_DIM = 200
+AUDIO_DIM = 200
 
 
 def oneHot(trainLabels, valLabels, testLabels):

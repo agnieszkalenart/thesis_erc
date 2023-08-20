@@ -22,7 +22,7 @@ session_conf = tf.compat.v1.ConfigProto(
       gpu_options=tf.compat.v1.GPUOptions(per_process_gpu_memory_fraction=0.7))
 
 # Select appropriate config from the file config.py
-flags.DEFINE_string("mode", "audio", "which modality")
+flags.DEFINE_string("mode", "textaudio", "which modality")
 flags.DEFINE_boolean("context", False, "which kind of features to choose")
 flags.DEFINE_string("nonlin_func", "nn.tanh", "type of nonlinearity")
 flags.DEFINE_float("learning_rate", 0.001, "Learning rate for SGD.")
@@ -32,7 +32,7 @@ flags.DEFINE_float("max_grad_norm", 40.0, "Clip gradients to this norm.")
 flags.DEFINE_integer("evaluation_interval", 1, "Evaluate and print results every x epochs")
 flags.DEFINE_integer("batch_size", 512, "Batch size for training.")
 flags.DEFINE_integer("hops", 3, "Number of hops in the Memory Network.")
-flags.DEFINE_integer("epochs", 50, "Number of epochs to train for.")
+flags.DEFINE_integer("epochs", 80, "Number of epochs to train for.")
 flags.DEFINE_integer("embedding_size", 100, "Embedding size for embedding matrices.")
 flags.DEFINE_integer("input_dims", None, "Number of timesteps of the RNN")
 flags.DEFINE_integer("timesteps", 40, "Number of timesteps of the RNN")
