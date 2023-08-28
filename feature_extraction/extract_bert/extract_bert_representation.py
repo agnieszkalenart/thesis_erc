@@ -12,15 +12,15 @@ import ast
 
 ## LOAD DATA
 
-trainID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/trainID_new.pkl",'rb'), encoding="latin1")
-testID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/testID_new.pkl",'rb'), encoding="latin1")
+trainID = pickle.load(open("CMN/IEMOCAP/data/trainID.pkl",'rb'), encoding="latin1")
+testID = pickle.load(open("CMN/IEMOCAP/data/testID.pkl",'rb'), encoding="latin1")
 trainID, valID = model_selection.train_test_split(trainID, test_size=.2, random_state=1227)
 
-text_transcripts_emb, _, _ = pickle.load(open('features/cmn_text_bert_with_history.pickle','rb'), encoding="latin1")
+text_transcripts_emb, _, _ = pickle.load(open('features/text_bert_distilbert.pickle','rb'), encoding="latin1")
 
 
 df = pd.DataFrame.from_dict(text_transcripts_emb, orient='index')
-transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
+transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 
 ## TRAIN A FCN ON TEXT EMB
 
@@ -164,7 +164,7 @@ transcription_other_history_emb = dict(zip(indices, transcription_other_history_
 
 
 # Save the dictionary as a pickle file
-with open('features/cmn_text_bert_with_history_representations200.pickle', 'wb') as file:
+with open('features/representations_text_bert_200.pickle', 'wb') as file:
     pickle.dump([transcription_emb, 
                 transcription_own_history_emb,
                 transcription_other_history_emb],

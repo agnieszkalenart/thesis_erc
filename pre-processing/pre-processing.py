@@ -2,10 +2,10 @@ from IEMOCAP_reader import IEMOCAPReader
 import pickle
 import pandas as pd
 
-DATA_PATH = '/Users/mareklukasikbackup/Aga/IEMOCAP_full_release'
+DATA_PATH = 'data/IEMOCAP_full_release'
 OUTPUT_PATH = 'features/iemocap_with_history.csv'
 
-transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
+transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 
 # add own history ids to dataframe
 own_history_df = pd.DataFrame.from_dict(own_historyID, orient='index')

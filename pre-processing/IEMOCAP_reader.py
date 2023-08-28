@@ -31,12 +31,6 @@ class IEMOCAPReader():
     def process(self, data_path=None, min_duration=0.0, min_sad_frames_duration=0, sample=None,
                 compute_speech_rate=False):
         
-        #data_path = str(Path(self.parameters['dataset_path']).expanduser().absolute())
-        #min_duration = self.parameters.get('min_duration',0.0)
-        #min_sad_frames_duration = self.parameters.get('min_sad_frames_duration',0.0)
-        #sample = self.parameters.get('sample',None)
-        #compute_speech_rate = self.parameters.get('compute_speech_rate',True)
-
         data = {}
         sentences_wav_files = glob.glob('{}/*/sentences/wav/*/*.wav'.format(data_path))
            
