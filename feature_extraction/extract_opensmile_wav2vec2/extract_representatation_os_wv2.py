@@ -28,8 +28,8 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.models import Model
 
 
-trainID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/trainID_new.pkl",'rb'), encoding="latin1")
-testID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/testID_new.pkl",'rb'), encoding="latin1")
+trainID = pickle.load(open("CMN/IEMOCAP/data/trainID.pkl",'rb'), encoding="latin1")
+testID = pickle.load(open("CMN/IEMOCAP/data/testID.pkl",'rb'), encoding="latin1")
 trainID, valID = model_selection.train_test_split(trainID, test_size=.2, random_state=1227)
 
 audio_emb = new_dict

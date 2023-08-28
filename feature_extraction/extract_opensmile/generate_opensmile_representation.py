@@ -12,13 +12,13 @@ from tensorflow.keras.models import Model
 CROSSVALIDATION = False
 
 AUDIO_EMBEDDINGS = 'features/cmn_audio_opensmile.pickle'
-trainID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/trainID_new.pkl",'rb'), encoding="latin1")
-testID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/testID_new.pkl",'rb'), encoding="latin1")
+trainID = pickle.load(open("CMN/IEMOCAP/data/trainID.pkl",'rb'), encoding="latin1")
+testID = pickle.load(open("CMN/IEMOCAP/data/testID.pkl",'rb'), encoding="latin1")
 valID,_ = model_selection.train_test_split(trainID, test_size=.2, random_state=1227)
 
 audio_emb = pickle.load(open(AUDIO_EMBEDDINGS, 'rb'), encoding="latin1")
 df = pd.DataFrame.from_dict(audio_emb, orient='index')
-transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
+transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 
 # filter 'xxx', 'sur', 'oth', 'dis', 'fea' from labels out
 todrop_values = ['xxx', 'sur', 'oth', 'dis', 'fea']
@@ -50,10 +50,6 @@ features = df
 labels = pd.Series(labels_array)
 indices = df.index
 
-# trainID = [ID for ID in trainID if ID not in todrop_keys]
-# testID = [ID for ID in testID if ID not in todrop_keys]
-# valID = [ID for ID in valID if ID not in todrop_keys]
-
 # Define the neural network model
 def create_model():
     model = Sequential()
@@ -74,8 +70,6 @@ if CROSSVALIDATION:
     scaler = StandardScaler()
     X_train = scaler.fit_transform(X_train)
     X_test = scaler.transform(X_test)
-
-
 
     # Perform cross-validation
     num_folds = 10
@@ -164,5 +158,5 @@ representations.update(dict_filtered_out)
 
 
 # Save the representations as a pickle file
-with open('/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/representations_opensmile.pkl', 'wb') as f:
+with open('features/audio_opensmile_representations.pkl', 'wb') as f:
     pickle.dump(representations, f)
