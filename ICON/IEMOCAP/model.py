@@ -1,14 +1,12 @@
+## source of the code: https://github.com/declare-lab/conv-emotion/tree/master
+
 import tensorflow as tf
 import numpy as np
 import sys
 #import tensorflow.contrib.rnn as rnn_cell
 import tensorflow.python.ops.rnn_cell as rnn_cell
 import tf_slim as slim
-
-
 from sklearn.model_selection import train_test_split
-
-
 
 
 class ICON:

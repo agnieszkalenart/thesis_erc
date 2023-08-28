@@ -1,29 +1,24 @@
+## source of the code: https://github.com/declare-lab/conv-emotion/tree/master
+
+
 import numpy as np
 import pandas as pd
 import pickle
 from sklearn import model_selection, metrics
 
-TEXT_EMBEDDINGS = "features/cmn_text_bert_with_history_representations200.pickle"
-# TEXT_EMBEDDINGS = "ICON_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_embeddings.pickle"
-# orginal audio features
-# AUDIO_EMBEDDINGS = "ICON_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_features.pickle"
-# audio embeddings with opensmile
-# AUDIO_EMBEDDINGS = 'features/representations_wav2vec2_mean_max_fcn.pkl'
-# audio embeddings with wav2vec2 
-AUDIO_EMBEDDINGS = 'features/representations_wav2vec2_opensmile.pkl'
+TEXT_EMBEDDINGS = "features/cmn_text_bert_with_history.pickle"
+AUDIO_EMBEDDINGS = 'features/representations_wav2vec2_mean_none.pkl'
 
-
-
-trainID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/trainID_new.pkl",'rb'), encoding="latin1")
-testID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/testID_new.pkl",'rb'), encoding="latin1")
+trainID = pickle.load(open("ICON/IEMOCAP/data/trainID.pkl",'rb'), encoding="latin1")
+testID = pickle.load(open("ICON/IEMOCAP/data/testID.pkl",'rb'), encoding="latin1")
 valID,_ = model_selection.train_test_split(testID, test_size=.4, random_state=1227)
 # valID = testID
 
-transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
+transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("ICON/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 label_idx = {'hap':0, 'sad':1, 'neu':2, 'ang':3, 'exc':4, 'fru':5}
 
-TEXT_DIM = 200
-AUDIO_DIM = 200
+TEXT_DIM = 768
+AUDIO_DIM = 768
 
 
 def oneHot(trainLabels, valLabels, testLabels):
@@ -76,18 +71,9 @@ def loadData(FLAGS):
 
 	## Loading Text features
 	text_transcripts_emb, text_own_history_emb, text_other_history_emb = pickle.load( open(TEXT_EMBEDDINGS, 'rb'), encoding="latin1")
-	if FLAGS.context:
-		print("loading contextual features")
-		text_emb = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/text/IEMOCAP_text_context.pickle", 'rb'), encoding="latin1")
-		text_transcripts_emb, text_own_history_emb, text_other_history_emb = updateDictText(text_transcripts_emb, text_own_history_emb, text_other_history_emb, text_emb)
 
 	## Loading Audio features
 	audio_emb = pickle.load(open(AUDIO_EMBEDDINGS, 'rb'), encoding="latin1")
-	if FLAGS.context:
-		audio_emb_context = pickle.load(open("/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/CMN_wav2vec2/IEMOCAP/data/audio/IEMOCAP_audio_context.pickle", 'rb'), encoding="latin1")
-		for ID in audio_emb.keys():
-			if ID in audio_emb_context.keys():
-				audio_emb[ID] = audio_emb_context[ID]
 	
 	## Text Embeddings for the queries
 	text_trainQueries = np.asarray([text_transcripts_emb[ID] for ID in trainID])
@@ -98,9 +84,6 @@ def loadData(FLAGS):
 	audio_trainQueries = np.asarray([audio_emb[ID] for ID in trainID])
 	audio_valQueries = np.asarray([audio_emb[ID] for ID in valID])
 	audio_testQueries = np.asarray([audio_emb[ID] for ID in testID])
-
-
-
 	
 	if FLAGS.mode == "text":
 		trainQueries = text_trainQueries
