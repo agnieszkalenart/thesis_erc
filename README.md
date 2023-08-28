@@ -6,9 +6,9 @@ This repository contains code used for Master's thesis "Audio and Textual Featur
 
 ### Before the experiments
 1. Run
-''''
+```
 pip install -r requirements.txt
-'''
+```
 
 ### How to re-run the experiments?
 
