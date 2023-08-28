@@ -11,14 +11,12 @@ import pickle
 import numpy as np
 import ast
 
-DATA_PATH = '/Users/mareklukasikbackup/Aga/IEMOCAP_full_release'
+DATA_PATH = 'data/IEMOCAP_full_release'
 
 #read data
 iemocap_reader = IEMOCAPReader()
 df_data = iemocap_reader.process(data_path=DATA_PATH, min_duration=0.0, min_sad_frames_duration=0, sample=None,compute_speech_rate=True)
 
-#small data
-# df_data= df_data.head(5)
 
 #create opensmile features
 opensmile = OpensmileExtractor()
@@ -30,5 +28,5 @@ data['opensmile'] = data['opensmile'].apply(np.array)
 data['opensmile'] = data['opensmile'].apply(lambda x: x.reshape(6373,))
 opensmile_dict = dict(zip(data.index, data['opensmile']))
 
-with open('features/cmn_audio_opensmile.pickle', 'wb') as file:
+with open('features/audio_opensmile.pickle', 'wb') as file:
     pickle.dump(opensmile_dict, file)

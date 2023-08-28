@@ -12,9 +12,8 @@ import numpy as np
 import ast
 
 
-
-DATA_PATH = '/Users/mareklukasikbackup/Aga/IEMOCAP_full_release'
-MODEL_PATH = '/Users/mareklukasikbackup/Aga/pre-trained_models/wav2vec_small.pt'
+DATA_PATH = 'data/IEMOCAP_full_release'
+MODEL_PATH = 'pre-trained_models/wav2vec_small.pt'
 
 
 #read data
@@ -48,5 +47,5 @@ cmn_emb = dict(zip(data.index, data['wav2vec2']))
 
 
 # Save the dictionary as a pickle file
-with open('features/cmn_audio_wav2vec2.pickle', 'wb') as file:
+with open('features/audio_wav2vec2.pickle', 'wb') as file:
     pickle.dump(cmn_emb, file)

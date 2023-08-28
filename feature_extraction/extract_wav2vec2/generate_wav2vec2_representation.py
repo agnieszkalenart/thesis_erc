@@ -9,23 +9,18 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.models import Model
 
-SMALL = False
-AUDIO_EMBEDDINGS = 'features/cmn_audio_wav2vec2.pickle'
-if SMALL:
-	trainID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/trainID_new_filtered.pkl",'rb'), encoding="latin1")
-	testID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/testID_new_filtered.pkl",'rb'), encoding="latin1")
-else:
-	trainID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/trainID_new.pkl",'rb'), encoding="latin1")
-	testID = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/testID_new.pkl",'rb'), encoding="latin1")
+AUDIO_EMBEDDINGS = 'features/audio_wav2vec2.pickle'
+
+trainID = pickle.load(open("CMN/IEMOCAP/data/trainID.pkl",'rb'), encoding="latin1")
+testID = pickle.load(open("CMN/IEMOCAP/data/testID.pkl",'rb'), encoding="latin1")
 trainID, valID = model_selection.train_test_split(trainID, test_size=.2, random_state=1227)
 
 audio_emb = pickle.load(open(AUDIO_EMBEDDINGS, 'rb'), encoding="latin1")
 
 
-
 df = pd.DataFrame.from_dict(audio_emb, orient='index')
 df = df.rename(columns={0: 'feature_array'})
-transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN_wav2vec2/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
+transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 
 # choose the desired method: 'mean',  'max', 'mean_max', 'no_pooling'
 METHOD = 'mean'
@@ -169,5 +164,5 @@ if EXTRACTION == 'none':
 
 # Save the representations as a pickle file
 
-with open('features/representations_wav2vec2_' + METHOD + '_' + EXTRACTION +'_new.pkl', 'wb') as f:
+with open('features/audio_wav2vec2_representations_' + METHOD + '_' + EXTRACTION +'.pkl', 'wb') as f:
     pickle.dump(representations, f)

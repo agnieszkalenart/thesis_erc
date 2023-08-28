@@ -1,24 +1,6 @@
 import pickle
 import numpy as np
-
-
-wav2vec2_representations = pickle.load(open('features/representations_wav2vec2_mean_none.pkl', 'rb'))
-opensmile_representations = pickle.load(open('features/cmn_audio_opensmile.pickle', 'rb'))
-
-# Concatenate the representations
-new_dict = {}  
-intersection_keys = set(wav2vec2_representations.keys()).intersection(opensmile_representations.keys())
-
-for key in intersection_keys:
-    new_dict[key] = np.concatenate((wav2vec2_representations[key], opensmile_representations[key]))
-
-# Save the new dictionary
-pickle.dump(new_dict, open('features/representations_wav2vec2_opensmile.pkl', 'wb'))
-
-
-import pickle
 from sklearn import model_selection, metrics
-import numpy as np
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
@@ -28,12 +10,20 @@ from tensorflow.keras.layers import Dense
 from tensorflow.keras.models import Model
 
 
-trainID = pickle.load(open("CMN/IEMOCAP/data/trainID_new.pkl",'rb'), encoding="latin1")
-testID = pickle.load(open("CMN/IEMOCAP/data/testID_new.pkl",'rb'), encoding="latin1")
+wav2vec2_representations = pickle.load(open('features/audio_wav2vec2_representations_mean_none.pkl', 'rb'))
+opensmile_representations = pickle.load(open('features/audio_opensmile.pickle', 'rb'))
+trainID = pickle.load(open("CMN/IEMOCAP/data/trainID.pkl",'rb'), encoding="latin1")
+testID = pickle.load(open("CMN/IEMOCAP/data/testID.pkl",'rb'), encoding="latin1")
 trainID, valID = model_selection.train_test_split(trainID, test_size=.2, random_state=1227)
 
-audio_emb = new_dict
+# Concatenate the representations
+new_dict = {}  
+intersection_keys = set(wav2vec2_representations.keys()).intersection(opensmile_representations.keys())
 
+for key in intersection_keys:
+    new_dict[key] = np.concatenate((wav2vec2_representations[key], opensmile_representations[key]))
+
+audio_emb = new_dict
 
 df = pd.DataFrame.from_dict(audio_emb, orient='index')
 transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
@@ -103,5 +93,5 @@ missing_dict = {"Ses03M_impro03_M001" : np.zeros(768)}
 representations.update(missing_dict)
 
 
-with open('features/representations_wav2vec2_opensmile_768.pkl', 'wb') as f:
+with open('features/audio_wav2vec2_opensmile_representations_768.pkl', 'wb') as f:
     pickle.dump(representations, f)

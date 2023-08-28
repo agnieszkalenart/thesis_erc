@@ -10,9 +10,8 @@ import os
 #from paips.utils import GenericFile
 # import opensmile
 
-MODEL_PATH = '/Users/mareklukasikbackup/Aga/pre-trained_models/wav2vec_small.pt'
-
-CONF_PATH = "/Users/mareklukasik_1/Downloads/opensmile-3.0.0/config/is09-13/IS13_ComParE.conf"
+#replace this path with path to your opensmile config file
+CONF_PATH = "YOUR_PATH/opensmile-3.0.0/config/is09-13/IS13_ComParE.conf"
 TMPARFFPATH = "tmp/tmp.arff"
 
 class OpensmileExtractor():
