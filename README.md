@@ -28,12 +28,20 @@ This repository contains code used for Master's thesis "Audio and Textual Featur
 #### Features descriptions
     .
     ├── ...
-    ├── features                        # Directory with the following features:
-    │   ├── extract_bert                # BERT-based text features
-    │   ├── extract_fasttext            # FastText text features
-    │   └── extract_opensmile           # OpenSMILE audio features
-    │   └── extract_opensmile_wav2vec2  # OpenSMILE and Wav2Vec2 audio features
-    │   └── extract_wav2vec2            # Wav2Vec2 audio features
+    ├── features                                          
+    │   ├── audio_opensmile_representations.pkl                 # OpenSMILE representations 
+    │   ├── audio_opensmile.pickle                              # OpenSMILE features
+    │   |── audio_wav2vec2_opensmile_representations_200.pkl    # OpenSMILE + Wav2Vec2 representations of dimension 200
+    │   |── audio_wav2vec2_opensmile_representations_768.pkl    # OpenSMILE + Wav2Vec2 representations of dimension 768
+    |   |── audio_wav2vec2_representations_max_fcn.pkl          # Wav2Vec2 max-pooling representations       
+    |   |── audio_wav2vec2_representations_mean_fcn.pkl         # Wav2Vec2 mean-pooling representations  
+    |   |── audio_wav2vec2_representations_mean_max_fcn.pkl     # Wav2Vec2 max- and mean-pooling representations  
+    |   |── audio_wav2vec2_representations_mean_none.pkl        # Wav2Vec2 mean-pooling 
+    |   |── audio_wav2vec2.pickle                               # Wav2Vec2 features
+    |   |── text_bert_distilbert_representations_200.pickle     # DistilBERT representations
+    |   |── text_bert_distilbert.pickle                         # DistilBERT features
+    |   |── text_bert_roberta.pickle                            # RoBERTa features
+    │   └── text_fasttext.pickle                                # FastText representations
     └── ...
 Files in the directories that do not have the word 'representation' extract features and with it in the name first extract features and then use a fully connected network to learn a latent representation of these features that is smaller than the original dimension of the features.
 
