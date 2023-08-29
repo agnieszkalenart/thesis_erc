@@ -25,7 +25,7 @@ This repository contains code used for Master's thesis "Audio and Textual Featur
     │   └── extract_opensmile_wav2vec2  # OpenSMILE and Wav2Vec2 audio features
     │   └── extract_wav2vec2            # Wav2Vec2 audio features
     └── ...
-#### Features descriptionx
+#### Features descriptions
     .
     ├── ...
     ├── features                        # Directory with the following features:
