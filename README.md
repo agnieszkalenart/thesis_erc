@@ -51,7 +51,7 @@ Files in the directories that do not have the word 'representation' extract feat
 ```
 pip install -r requirements.txt
 ```
-2. Download features and put them in the folder 'features'.
+2. Download [features](https://drive.google.com/file/d/1cUAg3k78TUI2AUfK__NFVw1xhvfC5MSb/view?usp=sharing) and put them in the folder 'features'.
 3. To run CMN with DistilBERT and Wav2Vec2 (with mean-pooling) features, run the file 'CMN/train_iemocap.py'.
    To run ICON with DistilBERT and Wav2Vec2 (with mean-pooling) features, run the file 'ICON/train_iemocap.py'.
 
