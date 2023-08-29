@@ -9,7 +9,6 @@ This repository contains code used for Master's thesis "Audio and Textual Featur
     ├── CMN                     # Files to run CMN model 
     ├── ICON                    # Files to run ICON model 
     ├── feature_extraction      # Files for extraction of text and audio features
-    ├── features                # Pickle files with extracted features
     ├── pre-processing          # Files to preprocess IEMOCAP Dataset
     ├── .gitignore
     ├── README.md
@@ -28,18 +27,6 @@ This repository contains code used for Master's thesis "Audio and Textual Featur
 Files in the directories that do not have the word 'representation' extract features and with it in the name first extract features and then use a fully connected network to learn a latent representation of these features that is smaller than the original dimension of the features.
 
   
-#### Features
-    .
-    ├── ...
-    ├── features                        # Directoruy with the following features:
-    │   ├── extract_bert                # BERT-based text features
-    │   ├── extract_fasttext            # FastText text features
-    │   └── extract_opensmile           # OpenSMILE audio features
-    │   └── extract_opensmile_wav2vec2  # OpenSMILE and Wav2Vec2 audio features
-    │   └── extract_wav2vec2            # Wav2Vec2 audio features
-    └── ...
-
-
 ### How to run experiments?
 1. Install all the required Python packages by:
 ```
@@ -50,14 +37,30 @@ pip install -r requirements.txt
 
 ### How to run experiments with custom features?
 To run CMN with custom features:
-1. Change the path to selected features in 'CMN/IEMOCAP/utils_cmn.py'.
+1. Change the path to selected features (description in the section below) in 'CMN/IEMOCAP/utils_cmn.py'.
 2. If necessary, change the TEXT_DIM and AUDIO_DIM in 'CMN/IEMOCAP/utils_cmn.py'.
 3. Run the file 'CMN/train_iemocap.py'.
 
 To run ICON with custom features:
-1. Change the path to selected features in 'ICON/IEMOCAP/utils.py'.
+1. Change the path to selected features (description in the section below) in 'ICON/IEMOCAP/utils.py'.
 2. If necessary, change the TEXT_DIM and AUDIO_DIM in 'CMN/IEMOCAP/utils.py'.
 3. Run the file 'ICON/train_iemocap.py'.
+
+
+#### Custom features
+To run experiments with custom features, first download them from here and place them in the folder 'features'.
+
+##### Features
+    .
+    ├── ...
+    ├── features                        # Directory with the following features:
+    │   ├── extract_bert                # BERT-based text features
+    │   ├── extract_fasttext            # FastText text features
+    │   └── extract_opensmile           # OpenSMILE audio features
+    │   └── extract_opensmile_wav2vec2  # OpenSMILE and Wav2Vec2 audio features
+    │   └── extract_wav2vec2            # Wav2Vec2 audio features
+    └── ...
+
 
 
 ### How to extract features on your own?
