@@ -1,7 +1,6 @@
 MELD.Raw
 .DS_Store
 *.pyc
-*.pkl
 *.ipynb_checkpoints
 *.p
 *.icloud
