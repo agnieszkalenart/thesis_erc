@@ -88,7 +88,7 @@ indices = representations.keys()
 
 
 # Load the IEMOCAP dataset
-df = pd.read_csv('features/iemocap_with_history.csv')
+df = pd.read_csv('data/iemocap_with_history.csv')
 
 df = df.rename(columns={'Unnamed: 0': 'indices'})
 df = df.rename(columns={'emotion': 'labels'})

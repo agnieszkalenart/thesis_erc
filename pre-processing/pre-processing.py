@@ -3,7 +3,7 @@ import pickle
 import pandas as pd
 
 DATA_PATH = 'data/IEMOCAP_full_release'
-OUTPUT_PATH = 'features/iemocap_with_history.csv'
+OUTPUT_PATH = 'data/iemocap_with_history.csv'
 
 transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 

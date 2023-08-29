@@ -17,6 +17,7 @@ trainID, valID = model_selection.train_test_split(trainID, test_size=.2, random_
 transcripts, labels, own_historyID, other_historyID, own_historyID_rank, other_historyID_rank = pickle.load(open("CMN/IEMOCAP/data/dataset.pkl",'rb'), encoding="latin1")
 label_idx = {'hap':0, 'sad':1, 'neu':2, 'ang':3, 'exc':4, 'fru':5 }
 
+#dimension of the embeddings
 TEXT_DIM = 768
 AUDIO_DIM = 768
 

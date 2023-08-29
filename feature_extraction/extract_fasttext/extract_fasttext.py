@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 model = fasttext.load_model('cc.en.300.bin')
 
 # Load the IEMOCAP dataset
-df = pd.read_csv('/Users/agnieszkalenart/Documents/mannheim/master_thesis/thesis_erc/features/iemocap.csv')
+df = pd.read_csv('data/iemocap.csv')
 print(df.head())
 
 df = df.rename(columns={'Unnamed: 0': 'indices'})
