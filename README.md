@@ -2,7 +2,7 @@
 ### Agnieszka Lenart
 This repository contains code used for Master's thesis "Audio and Textual Feature Extraction for Emotion Recognition in Conversations" written at the Chair of Artificial Intelligence at the University of Mannheim.
 
-### Contents of this repository:
+## Contents of this repository:
 
 #### Top-level directory
     .
@@ -25,18 +25,29 @@ This repository contains code used for Master's thesis "Audio and Textual Featur
     │   └── extract_opensmile_wav2vec2  # OpenSMILE and Wav2Vec2 audio features
     │   └── extract_wav2vec2            # Wav2Vec2 audio features
     └── ...
+#### Features descriptionx
+    .
+    ├── ...
+    ├── features                        # Directory with the following features:
+    │   ├── extract_bert                # BERT-based text features
+    │   ├── extract_fasttext            # FastText text features
+    │   └── extract_opensmile           # OpenSMILE audio features
+    │   └── extract_opensmile_wav2vec2  # OpenSMILE and Wav2Vec2 audio features
+    │   └── extract_wav2vec2            # Wav2Vec2 audio features
+    └── ...
 Files in the directories that do not have the word 'representation' extract features and with it in the name first extract features and then use a fully connected network to learn a latent representation of these features that is smaller than the original dimension of the features.
 
   
-### How to run experiments?
+## How to run experiments?
 1. Install all the required Python packages by:
 ```
 pip install -r requirements.txt
 ```
-2. To run CMN with DistilBERT and Wav2Vec2 (with mean-pooling) features, run the file 'CMN/train_iemocap.py'.
+2. Download features and put them in the folder 'features'.
+3. To run CMN with DistilBERT and Wav2Vec2 (with mean-pooling) features, run the file 'CMN/train_iemocap.py'.
    To run ICON with DistilBERT and Wav2Vec2 (with mean-pooling) features, run the file 'ICON/train_iemocap.py'.
 
-### How to run experiments with custom features?
+## How to run experiments with custom features?
 To run CMN with custom features:
 1. Change the path to selected features (description in the section below) in 'CMN/IEMOCAP/utils_cmn.py'.
 2. If necessary, change the TEXT_DIM and AUDIO_DIM in 'CMN/IEMOCAP/utils_cmn.py'.
@@ -48,23 +59,8 @@ To run ICON with custom features:
 3. Run the file 'ICON/train_iemocap.py'.
 
 
-#### Custom features
-To run experiments with custom features, first download them from here and place them in the folder 'features'.
 
-##### Features description
-    .
-    ├── ...
-    ├── features                        # Directory with the following features:
-    │   ├── extract_bert                # BERT-based text features
-    │   ├── extract_fasttext            # FastText text features
-    │   └── extract_opensmile           # OpenSMILE audio features
-    │   └── extract_opensmile_wav2vec2  # OpenSMILE and Wav2Vec2 audio features
-    │   └── extract_wav2vec2            # Wav2Vec2 audio features
-    └── ...
-
-
-
-### How to extract features on your own?
+## How to extract features on your own?
 1. Download IEMOCAP Dataset and put it in the '/data' folder.
 2. Run the 'pre-processing/pre-processing.py'.
 3. To extract BERT text features:
@@ -80,7 +76,7 @@ To run experiments with custom features, first download them from here and place
   - run 'feature_extraction/extract_wav2vec2/generate_wav2vec2_features.py'
 
 
-### Sources:
+## Sources:
 - [Emotion Recognition in Conversations GitHub](https://github.com/declare-lab/conv-emotion/tree/master)
 - [Official implementation of 'Emotion Recognition from Speech Using Wav2vec 2.0 Embeddings'](https://github.com/habla-liaa/ser-with-w2v2/tree/master)
 
