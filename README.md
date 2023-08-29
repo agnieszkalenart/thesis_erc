@@ -9,6 +9,7 @@ This repository contains code used for Master's thesis "Audio and Textual Featur
     ├── CMN                     # Files to run CMN model 
     ├── ICON                    # Files to run ICON model 
     ├── feature_extraction      # Files for extraction of text and audio features
+    ├── features                # Pickle files with extracted features
     ├── pre-processing          # Files to preprocess IEMOCAP Dataset
     ├── .gitignore
     ├── README.md
@@ -50,7 +51,7 @@ To run ICON with custom features:
 #### Custom features
 To run experiments with custom features, first download them from here and place them in the folder 'features'.
 
-##### Features
+##### Features description
     .
     ├── ...
     ├── features                        # Directory with the following features:
