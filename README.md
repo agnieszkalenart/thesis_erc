@@ -7,8 +7,8 @@ This repository contains code used for Master's thesis "Audio and Textual Featur
 #### Top-level directory
     .
     ├── CMN                     # Files to run CMN model 
-    ├── data                    # IEMOCAP Dataset
     ├── ICON                    # Files to run ICON model 
+    ├── data                    # IEMOCAP Dataset
     ├── feature_extraction      # Files for extraction of text and audio features
     ├── features                # Pickle files with extracted features
     ├── pre-processing          # Files to preprocess IEMOCAP Dataset
